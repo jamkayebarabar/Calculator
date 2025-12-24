@@ -6,13 +6,12 @@ let expression = "";
 
 const operators = ["+", "−", "×", "÷"];
 
-// Track first + button
+
 let plusSeen = false;
 
 buttons.forEach(btn => {
     let value = btn.textContent;
 
-    // 🔁 Convert duplicate "+" into "%"
     if (value === "+") {
         if (plusSeen) {
             btn.textContent = "%";
@@ -24,14 +23,12 @@ buttons.forEach(btn => {
 
     btn.addEventListener("click", () => {
 
-        // ===== Numbers =====
         if (!isNaN(value)) {
             input += value;
             result.textContent = expression + input;
             return;
         }
 
-        // ===== Clear =====
         if (value === "C") {
             input = "";
             expression = "";
@@ -39,17 +36,14 @@ buttons.forEach(btn => {
             return;
         }
 
-        // ===== Percent =====
         if (value === "%") {
             if (input === "") return;
 
-            // Convert input to percentage
             input = (parseFloat(input) / 100).toString();
             result.textContent = expression + input;
             return;
         }
 
-        // ===== Operators =====
         if (operators.includes(value)) {
             if (input === "") return;
 
@@ -59,7 +53,6 @@ buttons.forEach(btn => {
             return;
         }
 
-        // ===== Equals =====
         if (value === "=") {
             if (input === "") return;
 
@@ -84,3 +77,4 @@ buttons.forEach(btn => {
         }
     });
 });
+
