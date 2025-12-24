@@ -4,23 +4,65 @@ const buttons = document.querySelectorAll("button");
 let input = "";
 let expression = "";
 
-buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const value = btn.textContent;
+const operators = ["+", "−", "×", "÷"];
 
- 
+// Track first + button
+let plusSeen = false;
+
+buttons.forEach(btn => {
+    let value = btn.textContent;
+
+    // 🔁 Convert duplicate "+" into "%"
+    if (value === "+") {
+        if (plusSeen) {
+            btn.textContent = "%";
+            value = "%";
+        } else {
+            plusSeen = true;
+        }
+    }
+
+    btn.addEventListener("click", () => {
+
+        // ===== Numbers =====
         if (!isNaN(value)) {
             input += value;
             result.textContent = expression + input;
+            return;
         }
-     
-        else if (value === "C") {
+
+        // ===== Clear =====
+        if (value === "C") {
             input = "";
             expression = "";
             result.textContent = "0";
+            return;
         }
 
-        else if (value === "=") {
+        // ===== Percent =====
+        if (value === "%") {
+            if (input === "") return;
+
+            // Convert input to percentage
+            input = (parseFloat(input) / 100).toString();
+            result.textContent = expression + input;
+            return;
+        }
+
+        // ===== Operators =====
+        if (operators.includes(value)) {
+            if (input === "") return;
+
+            expression += input + value;
+            input = "";
+            result.textContent = expression;
+            return;
+        }
+
+        // ===== Equals =====
+        if (value === "=") {
+            if (input === "") return;
+
             try {
                 let fullExpression = expression + input;
 
@@ -39,15 +81,6 @@ buttons.forEach(btn => {
                 input = "";
                 expression = "";
             }
-        }
-
-        else {
-            if (input === "") return;
-
-            expression += input + value;
-            input = "";
-
-            result.textContent = expression;
         }
     });
 });
